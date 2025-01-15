@@ -7,33 +7,37 @@ use PHPUnit\Framework\TestCase;
 
 class FactorialTest extends TestCase
 {
+    protected $factorial;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->factorial = new Factorial();
+    }
+
     public function testFactorialOfOne()
     {
-        $factorial = new Factorial();
-        $this->assertEquals(1, $factorial->calculate(1));
+        $this->assertEquals(1, $this->factorial->calculate(1));
     }
 
     public function testFactorialOfTwo()
     {
-        $factorial = new Factorial();
-        $this->assertEquals(2, $factorial->calculate(2));
+        $this->assertEquals(2, $this->factorial->calculate(2));
     }
 
     public function testFactorialOfZero()
     {
-        $factorial = new Factorial();
-        $this->assertEquals(1, $factorial->calculate(0));
+        $this->assertEquals(1, $this->factorial->calculate(0));
     }
 
     public function testFactorialOfNegativeNumber()
     {
-        $factorial = new Factorial();
-        $this->assertEquals(-1, $factorial->calculate(-5));
+        $this->assertEquals(-1, $this->factorial->calculate(-5));
     }
 
     public function testFactorialOfTen()
     {
-        $factorial = new Factorial();
-        $this->assertEquals(3628800, $factorial->calculate(10));
+        $this->assertEquals(3628800, $this->factorial->calculate(10));
     }
 }
