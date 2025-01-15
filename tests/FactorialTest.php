@@ -16,6 +16,13 @@ class FactorialTest extends TestCase
         $this->factorial = new Factorial();
     }
 
+    protected function tearDown(): void
+    {
+        $this->factorial = null;
+        // echo "\ntearDown...";
+    }
+
+
     public function testFactorialOfOne()
     {
         $this->assertEquals(1, $this->factorial->calculate(1));
