@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Interfaces\IPaymentService;
 use App\NotificationService;
 use Exception;
 use App\Product;
@@ -22,9 +23,14 @@ class ShoppingCartTest extends TestCase
         parent::setUp();
 
         // $paymentService = new PaymentService();
+        // $paymentService = new FakePaymentService();
+
         // $notificationService = new NotificationService();
         $notificationService = $this->createMock(NotificationService::class);
-        $paymentService = new FakePaymentService();
+
+        $paymentService = $this->createStub(IPaymentService::class);
+        $paymentService->method('processPayment')->willReturn(true);
+
         $this->shoppingCart = new ShoppingCart($paymentService, $notificationService);
     }
 
