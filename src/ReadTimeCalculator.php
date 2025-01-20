@@ -25,8 +25,25 @@ class ReadTimeCalculator
     public function getReadTimeInHours(): string
     {
         $minutes = $this->getReadTimeInMinutes();
-        $hours = intdiv($minutes, 60);
-        $remainingMinutes = $minutes % 60;
-        return sprintf('%d:%02d', $hours, $remainingMinutes); // h:mm
+        // $hoursAndMinutes = $this->convertMinutesInHoursAndMinutes($minutes);
+        // return sprintf('%d:%02d', $hoursAndMinutes['hours'], $hoursAndMinutes['minutes']); // h:mm
+        // -------------------------------------------------------------------------------------------
+        // [$hours, $minutes] = $this->convertMinutesInHoursAndMinutes($minutes);
+        // -------------------------------------------------------------------------------------------
+        $timeCalculator = new TimeCalculator();
+        [$hours, $minutes] = $timeCalculator->convertMinutesInHoursAndMinutes($minutes);
+        return sprintf('%d:%02d', $hours, $minutes); // h:mm
     }
+
+    // private function convertMinutesInHoursAndMinutes(int $minutes): array
+    // {
+    //     $hours = intdiv($minutes, 60);
+    //     $remainingMinutes = $minutes % 60;
+    //     // return [
+    //     //     'hours' => $hours,
+    //     //     'minutes' => $remainingMinutes
+    //     // ];
+    //     // --------------------------------------------------
+    //     return [$hours, $remainingMinutes];
+    // }
 }
