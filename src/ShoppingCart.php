@@ -10,7 +10,7 @@ class ShoppingCart
     private $products = [];
     private $paid = false;
 
-    public function __construct(private IPaymentService $paymentService)
+    public function __construct(private IPaymentService $paymentService, private NotificationService $notificationService)
     {}
 
     public function hasProducts(): bool
@@ -52,6 +52,7 @@ class ShoppingCart
     {
         if ($this->paymentService->processPayment($this->getPriceSummatory())) {
             $this->paid = true;
+            $this->notificationService->send('Peio <peio@app.es>', 'Se ha efectuado un nuevo pago dentro de la Apli.');
         }
         return false;
     }

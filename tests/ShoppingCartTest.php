@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\NotificationService;
 use Exception;
 use App\Product;
 use App\ShoppingCart;
@@ -21,8 +22,10 @@ class ShoppingCartTest extends TestCase
         parent::setUp();
 
         // $paymentService = new PaymentService();
+        // $notificationService = new NotificationService();
+        $notificationService = $this->createMock(NotificationService::class);
         $paymentService = new FakePaymentService();
-        $this->shoppingCart = new ShoppingCart($paymentService);
+        $this->shoppingCart = new ShoppingCart($paymentService, $notificationService);
     }
 
     #[Test]
