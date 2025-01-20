@@ -4,6 +4,7 @@ namespace Tests;
 
 use App\Product;
 use App\ShoppingCart;
+use Exception;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 
@@ -59,5 +60,14 @@ class ShoppingCartTest extends TestCase
         $this->assertCount(0, $this->shoppingCart->getProducts());
 
         $this->assertContainsOnlyInstancesOf(Product::class, $this->shoppingCart->getProducts());
+    }
+
+    #[Test]
+    public function an_exception_is_thrown_when_product_to_remove_not_exist_in_shopping_cart()
+    {
+        $mouse = new Product('Logitech', 74);
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('El PRODUCTO a eliminar no se encuentra en el Carrito.');
+        $this->shoppingCart->removeProduct($mouse);
     }
 }
