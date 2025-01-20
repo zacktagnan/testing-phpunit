@@ -27,9 +27,37 @@ class ShoppingCartTest extends TestCase
     }
 
     #[Test]
-    public function it_is_true_that_shopping_cart_has_prodcuts()
+    public function it_is_true_that_shopping_cart_has_products()
     {
         $this->shoppingCart->addProduct(new Product($this->defaultProductName, $this->defaultProductPrice));
         $this->assertTrue($this->shoppingCart->hasProducts());
+    }
+
+    // #[Test]
+    // public function it_is_true_that_shopping_cart_has_an_array_of_products()
+    // {
+    //     $this->assertIsArray($this->shoppingCart->getProducts());
+    // }
+
+    #[Test]
+    public function it_is_true_that_shopping_cart_has_an_array_of_products_but_empty()
+    {
+        $this->assertIsArray($this->shoppingCart->getProducts());
+        $this->assertEmpty($this->shoppingCart->getProducts());
+    }
+
+    #[Test]
+    public function it_is_true_that_shopping_cart_has_a_correct_total_products_and_others()
+    {
+        $this->assertCount(0, $this->shoppingCart->getProducts());
+        $mouse = new Product('Logitech', 74);
+        $this->shoppingCart->addProduct($mouse);
+        $this->assertCount(1, $this->shoppingCart->getProducts());
+        $this->assertContains($mouse, $this->shoppingCart->getProducts());
+        $this->shoppingCart->removeProduct($mouse);
+        $this->assertNotContains($mouse, $this->shoppingCart->getProducts());
+        $this->assertCount(0, $this->shoppingCart->getProducts());
+
+        $this->assertContainsOnlyInstancesOf(Product::class, $this->shoppingCart->getProducts());
     }
 }
