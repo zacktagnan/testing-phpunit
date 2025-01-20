@@ -2,11 +2,13 @@
 
 namespace Tests;
 
+use Exception;
 use App\Product;
 use App\ShoppingCart;
-use Exception;
+// use App\PaymentService;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Doubles\FakePaymentService;
 
 class ShoppingCartTest extends TestCase
 {
@@ -18,7 +20,9 @@ class ShoppingCartTest extends TestCase
     {
         parent::setUp();
 
-        $this->shoppingCart = new ShoppingCart();
+        // $paymentService = new PaymentService();
+        $paymentService = new FakePaymentService();
+        $this->shoppingCart = new ShoppingCart($paymentService);
     }
 
     #[Test]
@@ -69,5 +73,12 @@ class ShoppingCartTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('El PRODUCTO a eliminar no se encuentra en el Carrito.');
         $this->shoppingCart->removeProduct($mouse);
+    }
+
+    #[Test]
+    public function checkout_cart_is_marked_as_paid()
+    {
+        $this->shoppingCart->checkout();
+        $this->assertTrue($this->shoppingCart->isPaid());
     }
 }

@@ -2,11 +2,16 @@
 
 namespace App;
 
+use App\Interfaces\IPaymentService;
 use Exception;
 
 class ShoppingCart
 {
     private $products = [];
+    private $paid = false;
+
+    public function __construct(private IPaymentService $paymentService)
+    {}
 
     public function hasProducts(): bool
     {
@@ -32,5 +37,27 @@ class ShoppingCart
         }
 
         unset($this->products[$index]);
+    }
+
+    public function getPriceSummatory()
+    {
+        $priceSummatory = 0;
+        foreach ($this->products as $product) {
+            $priceSummatory += $product->price;
+        }
+        return $priceSummatory;
+    }
+
+    public function checkout(): bool
+    {
+        if ($this->paymentService->processPayment($this->getPriceSummatory())) {
+            $this->paid = true;
+        }
+        return false;
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->paid;
     }
 }
