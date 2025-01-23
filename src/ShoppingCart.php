@@ -52,7 +52,13 @@ class ShoppingCart
     {
         if ($this->paymentService->processPayment($this->getPriceSummatory())) {
             $this->paid = true;
-            $this->notificationService->send('Peio <peio@app.es>', 'Se ha efectuado un nuevo pago dentro de la Apli.');
+            // -> con dos párametros separados...
+            // $this->notificationService->send('Peio <peio@app.es>', 'Se ha efectuado un nuevo pago dentro de la Apli.');
+            // -> con un ARRAY asociativo a modo de párametro único...
+            $this->notificationService->send([
+                'to' => 'Peio <peio@app.es>',
+                'content' => 'Se ha efectuado un nuevo pago dentro de la Apli.'
+            ]);
         }
         return false;
     }

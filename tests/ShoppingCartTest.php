@@ -18,6 +18,8 @@ class ShoppingCartTest extends TestCase
     protected $defaultProductName = 'PcBox';
     protected $defaultProductPrice = 1128;
 
+    protected $notificationService;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -26,12 +28,12 @@ class ShoppingCartTest extends TestCase
         // $paymentService = new FakePaymentService();
 
         // $notificationService = new NotificationService();
-        $notificationService = $this->createMock(NotificationService::class);
+        $this->notificationService = $this->createMock(NotificationService::class);
 
         $paymentService = $this->createStub(IPaymentService::class);
         $paymentService->method('processPayment')->willReturn(true);
 
-        $this->shoppingCart = new ShoppingCart($paymentService, $notificationService);
+        $this->shoppingCart = new ShoppingCart($paymentService, $this->notificationService);
     }
 
     #[Test]
@@ -89,5 +91,40 @@ class ShoppingCartTest extends TestCase
     {
         $this->shoppingCart->checkout();
         $this->assertTrue($this->shoppingCart->isPaid());
+    }
+
+    #[Test]
+    public function notification_sended_to_administrator_when_checkout_cart_is_paid()
+    {
+        $this->notificationService
+            ->expects($this->once())
+            ->method('send')
+            // -> con dos párametros separados...
+            // ->with(
+            //     $this->equalTo('Peio <peio@app.es>'),
+            //     $this->equalTo('Se ha efectuado un nuevo pago dentro de la Apli.')
+            // );
+            // -> con un ARRAY asociativo a modo de párametro único...
+            // ->with([
+            //     'to' => 'Peio <peio@app.es>',
+            //     'content' => 'Se ha efectuado un nuevo pago dentro de la Apli.',
+            // ]);
+            // -> con parámetro(s) dinámico(s)...
+            ->with(
+                $this->callback(function($arg) {
+                    return $this->verifyNotificationArguments($arg);
+                })
+            );
+
+        $this->shoppingCart->checkout();
+        // $this->assertTrue($this->shoppingCart->isPaid());
+    }
+
+    private function verifyNotificationArguments($arg)
+    {
+        return isset($arg['to'], $arg['content'])
+            // && $arg['to'] === 'Peio <peio@app.es>'
+            && preg_match('/@app.es>$/', $arg['to'])
+            && $arg['content'] === 'Se ha efectuado un nuevo pago dentro de la Apli.';
     }
 }
